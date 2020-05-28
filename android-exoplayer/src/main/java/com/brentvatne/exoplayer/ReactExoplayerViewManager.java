@@ -3,6 +3,7 @@ package com.brentvatne.exoplayer;
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.facebook.react.bridge.Dynamic;
 import com.facebook.react.bridge.ReadableArray;
@@ -22,6 +23,9 @@ import javax.annotation.Nullable;
 public class ReactExoplayerViewManager extends ViewGroupManager<ReactExoplayerView> {
 
     private static final String REACT_CLASS = "RCTVideo";
+
+    private static final String PROP_PLAYLIST = "playlist";
+    private static final String PROP_CONTROL_PLAYLIST = "controlPlaylist";
 
     private static final String PROP_SRC = "src";
     private static final String PROP_SRC_URI = "uri";
@@ -98,6 +102,17 @@ public class ReactExoplayerViewManager extends ViewGroupManager<ReactExoplayerVi
                 "ScaleToFill", Integer.toString(ResizeMode.RESIZE_MODE_FILL),
                 "ScaleAspectFill", Integer.toString(ResizeMode.RESIZE_MODE_CENTER_CROP)
         );
+    }
+
+
+    @ReactProp(name = PROP_PLAYLIST)
+    public void setPLaylist(final ReactExoplayerView videoView, @Nullable ReadableArray list) {
+        videoView.setPlaylist(list);
+    }
+
+    @ReactProp(name = PROP_CONTROL_PLAYLIST, defaultInt = 1)
+    public void setControlPlaylist(final ReactExoplayerView videoView, final int dir) {
+        videoView.controlPlaylist(dir);
     }
 
     @ReactProp(name = PROP_SRC)

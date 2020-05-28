@@ -25,6 +25,8 @@ class VideoEventEmitter {
         this.eventEmitter = reactContext.getJSModule(RCTEventEmitter.class);
     }
 
+    private static final String EVENT_NEXT_TRACK = "onNextTrack";
+
     private static final String EVENT_LOAD_START = "onVideoLoadStart";
     private static final String EVENT_LOAD = "onVideoLoad";
     private static final String EVENT_ERROR = "onVideoError";
@@ -48,6 +50,7 @@ class VideoEventEmitter {
     private static final String EVENT_PLAYBACK_RATE_CHANGE = "onPlaybackRateChange";
 
     static final String[] Events = {
+            EVENT_NEXT_TRACK,
             EVENT_LOAD_START,
             EVENT_LOAD,
             EVENT_ERROR,
@@ -72,6 +75,7 @@ class VideoEventEmitter {
 
     @Retention(RetentionPolicy.SOURCE)
     @StringDef({
+            EVENT_NEXT_TRACK,
             EVENT_LOAD_START,
             EVENT_LOAD,
             EVENT_ERROR,
@@ -127,8 +131,18 @@ class VideoEventEmitter {
 
     private static final String EVENT_PROP_TIMED_METADATA = "metadata";
 
-    private static final String EVENT_PROP_BITRATE = "bitrate";   
+    private static final String EVENT_PROP_BITRATE = "bitrate";
 
+    private static final String EVENT_PROP_LIST_ID = "id";
+    private static final String EVENT_PROP_LIST_INDEX = "index";
+
+
+    void nextTrack(TrackMapper map) {
+        WritableMap event = Arguments.createMap();
+        event.putString(EVENT_PROP_LIST_ID, map.id);
+        event.putInt(EVENT_PROP_LIST_INDEX, map.index);
+        receiveEvent(EVENT_NEXT_TRACK, event);
+    }
 
     void setViewId(int viewId) {
         this.viewId = viewId;

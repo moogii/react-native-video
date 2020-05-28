@@ -93,6 +93,12 @@ export default class Video extends Component {
     }
   };
 
+  controlPlaylist = (dir) => {
+    this.setNativeProps({
+      controlPlaylist: dir,
+    });
+  }
+
   presentFullscreenPlayer = () => {
     this.setNativeProps({ fullscreen: true });
   };
@@ -144,6 +150,12 @@ export default class Video extends Component {
   _onProgress = (event) => {
     if (this.props.onProgress) {
       this.props.onProgress(event.nativeEvent);
+    }
+  };
+
+  _onNextTrack = (event) => {
+    if (this.props.onNextTrack) {
+      this.props.onNextTrack(event.nativeEvent);
     }
   };
 
@@ -313,6 +325,7 @@ export default class Video extends Component {
         requestHeaders: source.headers ? this.stringsOnlyObject(source.headers) : {},
       },
       onVideoLoadStart: this._onLoadStart,
+      onNextTrack: this._onNextTrack,
       onVideoLoad: this._onLoad,
       onVideoError: this._onError,
       onVideoProgress: this._onProgress,
@@ -400,6 +413,7 @@ Video.propTypes = {
     PropTypes.number,
     PropTypes.object,
   ]),
+  controlPlaylist: PropTypes.func,
   fullscreen: PropTypes.bool,
   onVideoLoadStart: PropTypes.func,
   onVideoLoad: PropTypes.func,
@@ -425,6 +439,8 @@ Video.propTypes = {
     // Opaque type returned by require('./video.mp4')
     PropTypes.number,
   ]),
+  playlist: PropTypes.arrayOf(PropTypes.object),
+  onNextTrack: PropTypes.func,
   minLoadRetryCount: PropTypes.number,
   maxBitRate: PropTypes.number,
   resizeMode: PropTypes.string,
