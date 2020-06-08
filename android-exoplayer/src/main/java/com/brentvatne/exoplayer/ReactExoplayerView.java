@@ -1085,18 +1085,18 @@ class ReactExoplayerView extends FrameLayout implements
             return;
         }
         ignorePositionDiscontinuity = true;
-        if (dir < 0) {
-            int previousWindowIndex = player.getPreviousWindowIndex();
-            if (previousWindowIndex != C.INDEX_UNSET) {
+        if (dir == -1) {
+            if (player.hasPrevious()) {
                 player.previous();
             } else {
                 seekTo(0);
             }
-        } else {
-            int nextWindowIndex = player.getNextWindowIndex();
-            if (nextWindowIndex != C.INDEX_UNSET) {
+        } else if (dir == 1) {
+            if (player.hasNext()) {
                 player.next();
             }
+        } else {
+            player.seekTo(0, C.TIME_UNSET);
         }
     }
 
