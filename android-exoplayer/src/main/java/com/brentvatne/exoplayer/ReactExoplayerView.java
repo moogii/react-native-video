@@ -903,6 +903,7 @@ class ReactExoplayerView extends FrameLayout implements
 
     @Override
     public void onPositionDiscontinuity(int reason) {
+        Log.d(TAG, "onPositionDiscontinuity: " + reason);
         if (playerNeedsSource) {
             // This will only occur if the user has performed a seek whilst in the error state. Update the
             // resume position so that if the user then retries, playback will resume from the position to
@@ -914,14 +915,16 @@ class ReactExoplayerView extends FrameLayout implements
         if (reason == Player.DISCONTINUITY_REASON_PERIOD_TRANSITION
                 && player.getRepeatMode() == Player.REPEAT_MODE_ONE) {
             eventEmitter.end();
-        }
-
-        if (ignorePositionDiscontinuity) {
-            ignorePositionDiscontinuity = false;
             return;
         }
-        Log.d(TAG, "onPositionDiscontinuity");
-        videoChanged();
+
+//        if (ignorePositionDiscontinuity) {
+//            ignorePositionDiscontinuity = false;
+//            return;
+//        }
+        if (reason == Player.DISCONTINUITY_REASON_PERIOD_TRANSITION || reason == Player.DISCONTINUITY_REASON_SEEK_ADJUSTMENT) {
+            videoChanged();
+        }
     }
 
     @Override
