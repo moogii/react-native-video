@@ -27,6 +27,7 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.common.LifecycleState;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -193,7 +194,7 @@ class ReactExoplayerView extends FrameLayout implements
         createViews();
 
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        themedReactContext.addLifecycleEventListener(this);
+        context.addLifecycleEventListener(this);
         audioBecomingNoisyReceiver = new AudioBecomingNoisyReceiver(themedReactContext);
 
         initializePlayer();
@@ -249,11 +250,13 @@ class ReactExoplayerView extends FrameLayout implements
 
     @Override
     public void onHostPause() {
+        Log.d(TAG, "onHostPause start");
         isInBackground = true;
         if (playInBackground) {
             return;
         }
         setPlayWhenReady(false);
+        Log.d(TAG, "onHostPause end");
     }
 
     @Override
@@ -418,6 +421,10 @@ class ReactExoplayerView extends FrameLayout implements
 
     private void initializePlayer() {
         ReactExoplayerView self = this;
+
+        if (themedReactContext.getLifecycleState().equals(LifecycleState.BEFORE_CREATE)) {
+            themedReactContext.addLifecycleEventListener(this);
+        }
         // This ensures all props have been settled, to avoid async racing conditions.
         new Handler().postDelayed(new Runnable() {
             @Override
